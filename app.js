@@ -26,10 +26,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 function setupPage() {
   const isLoginPage = !!document.getElementById('loginBtn');
+  const isRegisterPage = !!document.getElementById('registerBtn');
   const isAppPage = !!document.getElementById('logoutBtn');
 
   if (isLoginPage) {
     document.getElementById('loginBtn').addEventListener('click', loginUserFrontend);
+    return;
+  }
+
+  if (isRegisterPage) {
+    document.getElementById('registerBtn').addEventListener('click', registerUserFrontend);
     return;
   }
 
@@ -133,7 +139,7 @@ async function loginUserFrontend() {
     });
 
     const text = await res.text();
-    console.log('RAW RESPONSE:', text);
+    console.log('RAW RESPONSE LOGIN:', text);
 
     let data;
     try {
@@ -150,7 +156,55 @@ async function loginUserFrontend() {
         window.location.href = 'app.html';
       }, 500);
     } else {
-      msg.innerText = 'Login gagal: ' + (data.message || 'Unknown error');
+      msg.innerText = data.message || 'Login gagal';
+    }
+
+  } catch (err) {
+    console.error(err);
+    msg.innerText = 'Error: ' + err.message;
+  }
+}
+
+async function registerUserFrontend() {
+  const fullName = document.getElementById('registerFullName').value.trim();
+  const username = document.getElementById('registerUsername').value.trim();
+  const password = document.getElementById('registerPassword').value;
+  const confirmPassword = document.getElementById('registerConfirmPassword').value;
+  const msg = document.getElementById('registerMsg');
+
+  msg.innerText = 'Sedang daftar...';
+
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'register',
+        fullName,
+        username,
+        password,
+        confirmPassword
+      })
+    });
+
+    const text = await res.text();
+    console.log('RAW RESPONSE REGISTER:', text);
+
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (err) {
+      msg.innerText = 'Response bukan JSON. Semak console.';
+      return;
+    }
+
+    if (data.ok) {
+      msg.innerText = data.message || 'Pendaftaran berjaya';
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 1200);
+    } else {
+      msg.innerText = data.message || 'Pendaftaran gagal';
     }
 
   } catch (err) {
