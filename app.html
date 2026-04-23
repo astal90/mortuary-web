@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mortuary System</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json" />
+</head>
+<body>
+  <div class="topbar">
+    <div>
+      <strong>Mortuary System</strong>
+      <span id="onlineBadge" class="badge offline">Offline</span>
+    </div>
+    <div>
+      <span id="userInfo"></span>
+      <button id="logoutBtn" class="btn-secondary">Logout</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="card">
+      <h2>DB1 - Rekod Kes</h2>
+
+      <div class="grid-2">
+        <div>
+          <label>Tarikh</label>
+          <input id="db1Tarikh" type="date" />
+        </div>
+        <div>
+          <label>No Siri</label>
+          <input id="db1NoSiri" type="text" placeholder="Contoh: SIRI-001" />
+        </div>
+
+        <div>
+          <label>Nama</label>
+          <input id="db1Nama" type="text" />
+        </div>
+        <div>
+          <label>No KP</label>
+          <input id="db1NoKp" type="text" />
+        </div>
+
+        <div>
+          <label>Jantina</label>
+          <input id="db1Jantina" type="text" />
+        </div>
+        <div>
+          <label>Umur</label>
+          <input id="db1Umur" type="text" />
+        </div>
+
+        <div>
+          <label>Bangsa</label>
+          <input id="db1Bangsa" type="text" />
+        </div>
+        <div>
+          <label>Waris</label>
+          <input id="db1Waris" type="text" />
+        </div>
+
+        <div>
+          <label>Telefon Waris</label>
+          <input id="db1TelWaris" type="text" />
+        </div>
+        <div>
+          <label>Hubungan</label>
+          <input id="db1Hubungan" type="text" />
+        </div>
+      </div>
+
+      <label>Catatan</label>
+      <textarea id="db1Catatan" rows="3"></textarea>
+
+      <div class="actions">
+        <button id="saveDb1Btn">Simpan DB1</button>
+      </div>
+
+      <p id="db1Msg" class="msg"></p>
+    </div>
+
+    <div class="card">
+      <h2>DB2 - Rekod Harian</h2>
+
+      <div class="grid-2">
+        <div>
+          <label>Tarikh</label>
+          <input id="db2Tarikh" type="date" />
+        </div>
+        <div>
+          <label>Kategori DB2</label>
+          <input id="db2Kategori" type="text" placeholder="Contoh: BID FORENSIK / ETD" />
+        </div>
+
+        <div>
+          <label>Nama</label>
+          <input id="db2Nama" type="text" />
+        </div>
+        <div>
+          <label>No KP</label>
+          <input id="db2NoKp" type="text" />
+        </div>
+      </div>
+
+      <label>Catatan</label>
+      <textarea id="db2Catatan" rows="3"></textarea>
+
+      <div class="actions">
+        <button id="saveDb2Btn">Simpan DB2</button>
+      </div>
+
+      <p id="db2Msg" class="msg"></p>
+    </div>
+
+    <div class="card">
+      <h2>Simpan Kedua-dua Sekali</h2>
+
+      <p class="muted">
+        Guna data DB1 dan kategori DB2 semasa. Sesuai kalau satu rekod perlu masuk kedua-dua DB.
+      </p>
+
+      <div class="actions">
+        <button id="saveBothBtn">Simpan DB1 + DB2</button>
+      </div>
+
+      <p id="bothMsg" class="msg"></p>
+    </div>
+
+    <div class="card">
+      <h2>Cari Kes Lama</h2>
+
+      <div class="search-row">
+        <input id="searchKeyword" type="text" placeholder="Cari nama / no KP / waris" />
+        <button id="searchBtn">Cari</button>
+      </div>
+
+      <div id="searchResults"></div>
+    </div>
+
+    <div class="card">
+      <h2>Status Offline Sync</h2>
+      <p id="pendingCount" class="muted">Pending: 0</p>
+      <div class="actions">
+        <button id="manualSyncBtn" class="btn-secondary">Sync Sekarang</button>
+      </div>
+      <div id="syncLog" class="sync-log"></div>
+    </div>
+  </div>
+
+  <script src="offline-db.js"></script>
+  <script src="sync.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
