@@ -120,6 +120,28 @@ async function updatePendingCountUI() {
   }
 }
 
+async function postToApi(payload) {
+  const res = await fetch(API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'text/plain;charset=utf-8'
+    },
+    body: JSON.stringify(payload)
+  });
+
+  const text = await res.text();
+  console.log('RAW API RESPONSE:', text);
+
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch (err) {
+    throw new Error('Response bukan JSON');
+  }
+
+  return data;
+}
+
 async function loginUserFrontend() {
   const username = document.getElementById('loginUsername').value.trim();
   const password = document.getElementById('loginPassword').value;
@@ -128,26 +150,11 @@ async function loginUserFrontend() {
   msg.innerText = 'Logging in...';
 
   try {
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'login',
-        username,
-        password
-      })
+    const data = await postToApi({
+      action: 'login',
+      username,
+      password
     });
-
-    const text = await res.text();
-    console.log('RAW RESPONSE LOGIN:', text);
-
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch (err) {
-      msg.innerText = 'Response bukan JSON. Semak console.';
-      return;
-    }
 
     if (data.ok) {
       localStorage.setItem('mortuaryUser', JSON.stringify(data.user));
@@ -158,7 +165,6 @@ async function loginUserFrontend() {
     } else {
       msg.innerText = data.message || 'Login gagal';
     }
-
   } catch (err) {
     console.error(err);
     msg.innerText = 'Error: ' + err.message;
@@ -175,28 +181,13 @@ async function registerUserFrontend() {
   msg.innerText = 'Sedang daftar...';
 
   try {
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'register',
-        fullName,
-        username,
-        password,
-        confirmPassword
-      })
+    const data = await postToApi({
+      action: 'register',
+      fullName,
+      username,
+      password,
+      confirmPassword
     });
-
-    const text = await res.text();
-    console.log('RAW RESPONSE REGISTER:', text);
-
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch (err) {
-      msg.innerText = 'Response bukan JSON. Semak console.';
-      return;
-    }
 
     if (data.ok) {
       msg.innerText = data.message || 'Pendaftaran berjaya';
@@ -206,7 +197,6 @@ async function registerUserFrontend() {
     } else {
       msg.innerText = data.message || 'Pendaftaran gagal';
     }
-
   } catch (err) {
     console.error(err);
     msg.innerText = 'Error: ' + err.message;
@@ -284,13 +274,7 @@ async function saveWithOfflineSupport(payload, msgElementId, successText) {
   }
 
   try {
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-
-    const data = await response.json();
+    const data = await postToApi(payload);
 
     if (!data.ok) {
       msg.textContent = data.message || 'Gagal simpan data';
@@ -334,17 +318,11 @@ async function searchCaseFrontend() {
   }
 
   try {
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'searchCase',
-        username: user?.username || '',
-        keyword
-      })
+    const data = await postToApi({
+      action: 'searchCase',
+      username: user?.username || '',
+      keyword
     });
-
-    const data = await response.json();
 
     if (!data.ok) {
       resultsBox.innerHTML = `<p>${data.message || 'Carian gagal'}</p>`;
